@@ -44,11 +44,7 @@ function getMaxDateString() {
   return d.toISOString().split('T')[0];
 }
 
-function generateBookingRef() {
-  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  const rand = String(Math.floor(Math.random() * 9000) + 1000);
-  return `RES-${date}-${rand}`;
-}
+
 
 export default function ReservationsPage() {
   const [form, setForm] = useState<FormData>({
@@ -90,15 +86,37 @@ export default function ReservationsPage() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+ async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
     setStatus('loading');
-    // Simulate API call — we wire the real API later
-    await new Promise(r => setTimeout(r, 1500));
-    const ref = generateBookingRef();
-    setBookingRef(ref);
-    setStatus('success');
+
+    try {
+      const res = await fetch('/api/reserve', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          fullName:    form.fullName,
+          email:       form.email,
+          phone:       form.phone,
+          date:        form.date,
+          time:        form.time,
+          partySize:   form.partySize,
+          specialReqs: form.specialReqs,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setBookingRef(data.bookingRef);
+        setStatus('success');
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
   }
 
   // ── Success State ──────────────────────────────────────────
