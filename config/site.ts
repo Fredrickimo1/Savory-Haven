@@ -2,9 +2,9 @@ export const siteConfig = {
   name:     'Savory Haven',
   tagline:  'Where every meal tells a story.',
   url:      'http://localhost:3000',
-  phone:    '+234 801 234 5678',
-  whatsapp: '+234 801 234 5678',
-  email:    'hello@savoryhaven.com',
+  phone:    '+234 8147183590',
+  whatsapp: '+234 8147183590',
+  email:    'hello.savoryhaven@gmail.com',
   address: {
     street:  '12 Ada George Road',
     city:    'Port Harcourt',
