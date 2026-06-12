@@ -1,3 +1,4 @@
+// About page: company story, values, team profiles, and a call-to-action to reserve a table.
 import Link from 'next/link';
 import { Award, Heart, Leaf, UtensilsCrossed } from 'lucide-react';
 

@@ -1,3 +1,4 @@
+// Root layout for the app. This file defines the shared page shell including fonts, navigation, footer, and the global WhatsApp button.
 import type { Metadata }  from 'next';
 import { Playfair_Display, Inter } from 'next/font/google';
 import { Navbar }           from '@/components/layout/Navbar';

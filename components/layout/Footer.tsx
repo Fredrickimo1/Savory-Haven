@@ -1,3 +1,4 @@
+// Site footer component: renders brand info, quick navigation links, and contact details.
 import Link           from 'next/link';
 import { UtensilsCrossed, Phone, Mail, MapPin } from 'lucide-react';
 import { siteConfig } from '@/config/site';

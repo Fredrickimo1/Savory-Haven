@@ -1,5 +1,6 @@
 import { siteConfig } from '@/config/site';
 
+// Floating WhatsApp button component used on every page via the root layout.
 export function WhatsAppButton() {
   const message = encodeURIComponent(
     `Hi Savory Haven! 👋\nI'd like to make a reservation.\n\nName:\nDate:\nParty size:`

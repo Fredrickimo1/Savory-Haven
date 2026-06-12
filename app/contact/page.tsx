@@ -1,5 +1,6 @@
 'use client';
 
+// Contact page: shows contact details, opening hours, and a message form with success feedback.
 import { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, CheckCircle, MessageSquare } from 'lucide-react';
 import { siteConfig } from '@/config/site';

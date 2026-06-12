@@ -1,5 +1,6 @@
 'use client';
 
+// Reservation page: client-side booking form with validation and a success confirmation state.
 import { useState } from 'react';
 import { Calendar, Clock, Users, User, Mail, Phone, CheckCircle } from 'lucide-react';
 import { restaurantConfig } from '@/config/restaurant';

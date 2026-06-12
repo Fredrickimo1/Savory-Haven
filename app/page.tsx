@@ -1,3 +1,4 @@
+// Homepage: hero section, featured dishes, opening hours, and a location summary.
 import Link from 'next/link';
 import { UtensilsCrossed, Clock, MapPin, Phone, ChevronRight } from 'lucide-react';
 import { siteConfig } from '@/config/site';

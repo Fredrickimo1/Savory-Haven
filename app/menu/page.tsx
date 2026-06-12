@@ -1,5 +1,6 @@
 'use client';
 
+// Menu page: renders food and drinks tabs, search, dietary tags, and price listings.
 import { useState } from 'react';
 import { Search, ChefHat } from 'lucide-react';
 import Link from 'next/link';
