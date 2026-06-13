@@ -29,8 +29,18 @@ export default function ContactPage() {
     e.preventDefault();
     if (!form.fullName || !form.email || !form.message) return;
     setStatus('loading');
-    await new Promise(r => setTimeout(r, 1200));
-    setStatus('success');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(form),
+      });
+      const data = await res.json();
+      setStatus(data.success ? 'success' : 'error');
+    } catch {
+      setStatus('error');
+    }
   }
 
   return (
