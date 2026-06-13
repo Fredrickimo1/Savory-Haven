@@ -51,9 +51,10 @@ export default function ReservationsPage() {
     fullName: '', email: '', phone: '',
     date: '', time: '', partySize: '2', specialReqs: '',
   });
-  const [errors,     setErrors]     = useState<FormErrors>({});
-  const [status,     setStatus]     = useState<Status>('idle');
-  const [bookingRef, setBookingRef] = useState('');
+  const [errors,      setErrors]      = useState<FormErrors>({});
+  const [status,      setStatus]      = useState<Status>('idle');
+  const [bookingRef,  setBookingRef]  = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   function validate(): boolean {
     const e: FormErrors = {};
@@ -112,9 +113,18 @@ export default function ReservationsPage() {
         setBookingRef(data.bookingRef);
         setStatus('success');
       } else {
+        const detailMessage = data.details?.error || data.details?.message || '';
+        setErrorMessage(
+          detailMessage
+            ? `${data.error || 'Unable to send confirmation email.'} (${detailMessage})`
+            : data.error || 'Unable to send confirmation email.'
+        );
+        console.error('Reservation submission failed:', data);
         setStatus('error');
       }
-    } catch {
+    } catch (err) {
+      console.error('Reservation request error:', err);
+      setErrorMessage('Unable to submit reservation. Please try again later.');
       setStatus('error');
     }
   }
@@ -312,7 +322,7 @@ export default function ReservationsPage() {
           {/* Error banner */}
           {status === 'error' && (
             <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-600">
-              Something went wrong. Please call us on <strong>{siteConfig.phone}</strong>.
+              {errorMessage ? errorMessage : `Something went wrong. Please call us on ${siteConfig.phone}.`}
             </div>
           )}
 
