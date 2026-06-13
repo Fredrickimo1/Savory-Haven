@@ -1,0 +1,12 @@
+﻿
+Path                                                                  LineNumbe
+                                                                              r
+----                                                                  ---------
+C:\dev\savory-haven\.next\server\chunks\ssr\1ob1_1l15vi4._.js                 1
+C:\dev\savory-haven\.next\server\chunks\ssr\node_modules_17t5sjo._.js         1
+C:\dev\savory-haven\.next\server\chunks\ssr\node_modules_1cqc0of._.js       139
+C:\dev\savory-haven\.next\server\chunks\ssr\node_modules_1f_z_1x._.js         1
+C:\dev\savory-haven\.next\server\chunks\ssr\[root-of-the-server]__...       151
+C:\dev\savory-haven\.next\server\chunks\ssr\[root-of-the-server]__...       151
+
+

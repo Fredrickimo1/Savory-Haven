@@ -12,8 +12,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const RESEND_API_KEY   = process.env.RESEND_API_KEY;
-    const RESTAURANT_EMAIL = process.env.RESTAURANT_EMAIL;
+    const RESEND_API_KEY    = process.env.RESEND_API_KEY;
+    const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Savory Haven <onboarding@resend.dev>';
+    const RESTAURANT_EMAIL  = process.env.RESTAURANT_EMAIL;
 
     if (!RESEND_API_KEY || !RESTAURANT_EMAIL) {
       return NextResponse.json(
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
         'Content-Type':  'application/json',
       },
       body: JSON.stringify({
-        from:    'Savory Haven <onboarding@resend.dev>',
+        from:    RESEND_FROM_EMAIL,
         to:      [email],
         subject: 'We got your message — Savory Haven',
         html: `
@@ -54,13 +55,13 @@ export async function POST(req: NextRequest) {
       }),
     });
 
-    const customerResult = await customerResponse.json();
+    const customerResult = await customerResponse.json().catch(() => ({}));
     console.log('[Resend customer contact]', customerResult);
 
     if (!customerResponse.ok) {
       return NextResponse.json(
         { success: false, error: 'Failed to send acknowledgement email', details: customerResult },
-        { status: customerResponse.status }
+        { status: customerResponse.status || 502 }
       );
     }
 
@@ -72,7 +73,7 @@ export async function POST(req: NextRequest) {
         'Content-Type':  'application/json',
       },
       body: JSON.stringify({
-        from:    'Savory Haven <onboarding@resend.dev>',
+        from:    RESEND_FROM_EMAIL,
         to:      [RESTAURANT_EMAIL],
         subject: `New Enquiry — ${subjectLabels[subject] || subject} from ${fullName}`,
         html: `
@@ -90,13 +91,13 @@ export async function POST(req: NextRequest) {
       }),
     });
 
-    const restaurantResult = await restaurantResponse.json();
+    const restaurantResult = await restaurantResponse.json().catch(() => ({}));
     console.log('[Resend restaurant contact]', restaurantResult);
 
     if (!restaurantResponse.ok) {
       return NextResponse.json(
         { success: false, error: 'Failed to notify restaurant', details: restaurantResult },
-        { status: restaurantResponse.status }
+        { status: restaurantResponse.status || 502 }
       );
     }
 

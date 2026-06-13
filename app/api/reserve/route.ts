@@ -19,9 +19,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const bookingRef       = generateBookingRef();
-    const RESEND_API_KEY   = process.env.RESEND_API_KEY!;
-    const RESTAURANT_EMAIL = process.env.RESTAURANT_EMAIL!;
+    const bookingRef        = generateBookingRef();
+    const RESEND_API_KEY    = process.env.RESEND_API_KEY;
+    const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Savory Haven <onboarding@resend.dev>';
+    const RESTAURANT_EMAIL  = process.env.RESTAURANT_EMAIL;
+
+    if (!RESEND_API_KEY || !RESTAURANT_EMAIL) {
+      console.error('[POST /api/reserve] Missing email config')
+      return NextResponse.json(
+        { success: false, error: 'Email service misconfigured' },
+        { status: 500 }
+      )
+    }
 
     // ── Save to Supabase ──────────────────────────────────
     const supabase = createClient(
@@ -50,14 +59,14 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Email to customer ─────────────────────────────────
-    await fetch('https://api.resend.com/emails', {
+    const customerResponse = await fetch('https://api.resend.com/emails', {
       method:  'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
         'Content-Type':  'application/json',
       },
       body: JSON.stringify({
-        from:    'Savory Haven <onboarding@resend.dev>',
+        from:    RESEND_FROM_EMAIL,
         to:      [email],
         subject: `Your table at Savory Haven — ${date} at ${time}`,
         html: `
@@ -79,15 +88,24 @@ export async function POST(req: NextRequest) {
       }),
     });
 
+    const customerResult = await customerResponse.json().catch(() => ({}));
+    if (!customerResponse.ok) {
+      console.error('[Resend customer error]', customerResult)
+      return NextResponse.json(
+        { success: false, error: 'Failed to send booking confirmation', details: customerResult },
+        { status: customerResponse.status || 502 }
+      )
+    }
+
     // ── Notification to restaurant ────────────────────────
-    await fetch('https://api.resend.com/emails', {
+    const restaurantResponse = await fetch('https://api.resend.com/emails', {
       method:  'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
         'Content-Type':  'application/json',
       },
       body: JSON.stringify({
-        from:    'Savory Haven <onboarding@resend.dev>',
+        from:    RESEND_FROM_EMAIL,
         to:      [RESTAURANT_EMAIL],
         subject: `New Booking — ${fullName} · ${date} · ${time} · ${partySize} guests`,
         html: `
@@ -107,6 +125,15 @@ export async function POST(req: NextRequest) {
         `,
       }),
     });
+
+    const restaurantResult = await restaurantResponse.json().catch(() => ({}));
+    if (!restaurantResponse.ok) {
+      console.error('[Resend restaurant error]', restaurantResult)
+      return NextResponse.json(
+        { success: false, error: 'Failed to notify restaurant', details: restaurantResult },
+        { status: restaurantResponse.status || 502 }
+      )
+    }
 
     return NextResponse.json(
       { success: true, bookingRef },

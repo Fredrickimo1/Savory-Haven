@@ -29,6 +29,22 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Environment setup
+
+Copy `.env.example` to `.env.local` and fill in the values for Supabase and Resend.
+
+- `NEXT_PUBLIC_SUPABASE_URL`: your Supabase project URL
+- `SUPABASE_SERVICE_ROLE_KEY`: your Supabase service role key
+- `RESEND_API_KEY`: your Resend API key
+- `RESTAURANT_EMAIL`: the restaurant notification email address
+- `RESEND_FROM_EMAIL`: verified sender address for Resend, e.g. `Savory Haven <hello@your-verified-domain.com>`
+
+For full email setup details, see [docs/EMAIL_SETUP.md](./docs/EMAIL_SETUP.md).
+
+For contribution guidelines and local setup instructions, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+> Resend sandbox mode only allows sending to verified test addresses. Verify your domain at `https://resend.com/domains` before sending to external recipients.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
