@@ -20,6 +20,7 @@ export default function ContactPage() {
     fullName: '', email: '', subject: 'general_enquiry', message: '',
   });
   const [status, setStatus] = useState<Status>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -38,7 +39,9 @@ export default function ContactPage() {
       });
       const data = await res.json();
       setStatus(data.success ? 'success' : 'error');
-    } catch {
+    } catch (err) {
+      console.error('Contact request error:', err);
+      setErrorMessage('Unable to send your message. Please try again later.');
       setStatus('error');
     }
   }
@@ -157,7 +160,7 @@ export default function ContactPage() {
                 Thanks for reaching out. We will get back to you within 24 hours.
               </p>
               <button
-                onClick={() => { setStatus('idle'); setForm({ fullName: '', email: '', subject: 'general_enquiry', message: '' }); }}
+                onClick={() => { setStatus('idle'); setErrorMessage(''); setForm({ fullName: '', email: '', subject: 'general_enquiry', message: '' }); }}
                 className="mt-4 text-sm text-amber-700 font-medium hover:text-amber-900"
               >
                 Send another message
@@ -165,6 +168,11 @@ export default function ContactPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {status === 'error' && errorMessage && (
+                <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-600">
+                  {errorMessage}
+                </div>
+              )}
               <div className="space-y-1">
                 <label className="text-sm font-medium text-gray-700">Your Name</label>
                 <input
