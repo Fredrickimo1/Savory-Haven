@@ -1,52 +1,182 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Savory Haven — Restaurant Website
 
-## Getting Started
+The official website for Savory Haven, a Nigerian restaurant in Port Harcourt. Built with Next.js, Sanity CMS, Supabase, and deployed on Vercel.
 
-First, run the development server:
+**Live site:** https://savory-haven-psi.vercel.app
+
+---
+
+## What This Site Does
+
+- Displays the full restaurant menu, managed live through Sanity CMS
+- Accepts table reservations, validated and stored in a Supabase database
+- Sends automatic email confirmations to guests and notifications to the restaurant
+- Provides a contact form for general enquiries and private events
+- Shows opening hours, location, and a photo gallery
+- Includes a WhatsApp quick-contact button on every page
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| CMS | Sanity.io |
+| Database | Supabase (PostgreSQL) |
+| Email | Resend |
+| Hosting | Vercel |
+
+---
+
+## Project Structure
+
+savory-haven/
+
+├── app/
+
+│   ├── page.tsx                  Home page
+
+│   ├── menu/                     Menu page (pulls from Sanity)
+
+│   ├── reservations/             Reservation form
+
+│   ├── about/                    About page
+
+│   ├── gallery/                  Photo gallery
+
+│   ├── contact/                  Contact form
+
+│   └── api/
+
+│       ├── reserve/route.ts      Reservation API (Supabase + Resend)
+
+│       └── contact/route.ts      Contact form API (Resend)
+
+├── components/
+
+│   └── layout/                   Navbar, Footer, WhatsApp button
+
+├── config/
+
+│   ├── site.ts                   Restaurant name, contact info, address
+
+│   ├── restaurant.ts             Business rules (max party size, etc.)
+
+│   └── navigation.ts             Nav menu links
+
+├── lib/
+
+│   ├── sanity/                   Sanity client and queries
+
+│   └── utils/                    Helper functions (price formatting, etc.)
+
+└── sanity.config.ts               Sanity Studio configuration
+
+
+## Getting Started Locally
+
+### Prerequisites
+
+- Node.js 18 or higher
+- A Sanity account
+- A Supabase account
+- A Resend account
+
+### 1. Clone and Install
+
+```bash
+git clone https://github.com/Fredrickimo1/Savory-Haven.git
+cd savory-haven
+npm install
+```
+
+### 2. Set Up Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```bash
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+NEXT_PUBLIC_SANITY_PROJECT_ID=your-sanity-project-id
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_TOKEN=your-sanity-token
+
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+
+RESEND_API_KEY=your-resend-api-key
+RESTAURANT_EMAIL=hello.savoryhaven@gmail.com
+```
+
+### 3. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Run Sanity Studio
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npx sanity dev
+```
 
-## Learn More
+Open [http://localhost:3333](http://localhost:3333) to manage menu items and restaurant content.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the local development server |
+| `npm run build` | Build the app for production |
+| `npm run start` | Run the production build locally |
+| `npx sanity dev` | Start the Sanity Studio locally |
 
-## Environment setup
+---
 
-Copy `.env.example` to `.env.local` and fill in the values for Supabase and Resend.
+## Managing Content
 
-- `NEXT_PUBLIC_SUPABASE_URL`: your Supabase project URL
-- `SUPABASE_SERVICE_ROLE_KEY`: your Supabase service role key
-- `RESEND_API_KEY`: your Resend API key
-- `RESTAURANT_EMAIL`: the restaurant notification email address
-- `RESEND_FROM_EMAIL`: verified sender address for Resend, e.g. `Savory Haven <hello@your-verified-domain.com>`
+Restaurant staff can update the menu, photos, and hours without touching any code:
 
-For full email setup details, see [docs/EMAIL_SETUP.md](./docs/EMAIL_SETUP.md).
+1. Go to the Sanity Studio (`localhost:3333` locally, or the deployed Studio URL once available)
+2. Log in with the authorised account
+3. Click **Menu Item** to add, edit, or remove dishes
+4. Toggle **Available** off to hide a dish without deleting it
+5. Click **Publish** — changes appear on the live site within 60 seconds
 
-For contribution guidelines and local setup instructions, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+---
 
-> Resend sandbox mode only allows sending to verified test addresses. Verify your domain at `https://resend.com/domains` before sending to external recipients.
+## Deployment
 
-## Deploy on Vercel
+The site auto-deploys to Vercel on every push to the `main` branch.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git add .
+git commit -m "your message here"
+git push origin main
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Environment variables must be set in the Vercel dashboard under **Project Settings → Environment Variables**, matching the same keys used in `.env.local`.
+
+---
+
+## Roadmap
+
+- [ ] Custom domain (savoryhaven.app or similar)
+- [ ] Real food and interior photography
+- [ ] Restaurant Profile content fully driven by Sanity (hours, address, socials)
+- [ ] Online ordering and deposits via Paystack
+- [ ] Admin dashboard for viewing reservations
+
+---
+
+## Contact
+
+For questions about this project, reach out at hello.savoryhaven@gmail.com.
